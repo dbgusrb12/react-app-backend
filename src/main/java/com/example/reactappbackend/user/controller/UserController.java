@@ -15,6 +15,20 @@ public class UserController {
 
     private Gson gson = new Gson();
 
+    @GetMapping(value = "/auth")
+    public AuthUserResponse authCheck() {
+        return AuthUserResponse.builder()
+                .id(1)
+                .isAdmin(true)
+                .isAuth(false)
+                .email("dbgusrb12@gmail.com")
+                .name("현규")
+                .lastName("유")
+                .role("관리자")
+                .image("")
+                .build();
+    }
+
     @GetMapping(value = "/logout")
     public LogoutUserResponse logoutUser() {
         LogoutUserResponse logoutUserResponse = new LogoutUserResponse();
