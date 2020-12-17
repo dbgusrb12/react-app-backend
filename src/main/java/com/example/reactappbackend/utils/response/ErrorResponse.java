@@ -13,9 +13,9 @@ public class ErrorResponse extends Response {
     private String message;
 
     private ErrorResponse() {
-        super();
-        this.status(Response.Status.FAIL)
-                .setStatusCode(HttpStatus.BAD_REQUEST.value());
+        super(null);
+        this.setStatus(Status.FAIL);
+        this.setStatusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     public ErrorResponse error(String error) {
