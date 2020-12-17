@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class HelloController {
 
-    private final JwtUtils jwtUtils;
-
     @GetMapping(value = "/hello")
     public String hello() {
         return JwtUtils.createToken("dbgusrb12@gmail.com", "유현규");
