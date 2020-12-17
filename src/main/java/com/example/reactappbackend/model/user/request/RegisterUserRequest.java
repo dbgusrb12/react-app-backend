@@ -1,4 +1,4 @@
-package com.example.reactappbackend.user.dto;
+package com.example.reactappbackend.model.user.request;
 
 import lombok.Data;
 

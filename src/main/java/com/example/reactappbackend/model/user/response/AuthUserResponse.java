@@ -1,4 +1,4 @@
-package com.example.reactappbackend.user.dto;
+package com.example.reactappbackend.model.user.response;
 
 import lombok.Builder;
 import lombok.Data;
