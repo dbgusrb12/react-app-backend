@@ -17,7 +17,6 @@ import java.util.Map;
 public class JwtUtils {
     private static String secretKey = "sample.secret.key";
     private static Long tokenExpiresInMillis = 30 * 60 * 1000L;
-    private static Long tokenRefreshInMillis;
 
     public static String createToken(String email, String name) {
         // 암호화 설정
@@ -65,12 +64,7 @@ public class JwtUtils {
         try {
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                     .parseClaimsJws(jwt).getBody();
-            long remaining = claims.getExpiration().getTime() - new Date().getTime();
-            if (remaining < tokenRefreshInMillis) {
-                return TokenStatus.REFRESH;
-            } else {
-                return TokenStatus.VALID;
-            }
+            return TokenStatus.VALID;
         } catch (ExpiredJwtException e) {
             return TokenStatus.EXPIRED;
         } catch (Exception e) {

@@ -19,6 +19,18 @@ public class UserController {
 
     private final UserService userService;
 
+    @PostMapping(value = "/register")
+    public Response<RegisterUserResponse> registerUser(@RequestBody RegisterUserRequest registerUserRequest) {
+        // name, email, password 를 받아서 유효성 검사, 비밀번호 암호화 처리 후 DB에 넣고 success 처리
+        RegisterUserResponse registerUserResponse = userService.registerUser(registerUserRequest)
+        return new Response<>(
+                RegisterUserResponse
+                        .builder()
+                        .success(true)
+                        .build()
+        );
+    }
+
     @GetMapping(value = "/auth")
     public Response<AuthUserResponse> authCheck() {
         // 토큰 체크해서 인증 하는 로직 구현
@@ -54,18 +66,6 @@ public class UserController {
                         .loginSuccess(true)
                         .userId("sampleUserId")
                         .build()
-        );
-    }
-
-    @PostMapping(value = "/register")
-    public Response<RegisterUserResponse> registerUser(@RequestBody RegisterUserRequest registerUserRequest) {
-        // name, email, password 를 받아서 유효성 검사, 비밀번호 암호화 처리 후 DB에 넣고 success 처리
-
-        return new Response<>(
-            RegisterUserResponse
-                    .builder()
-                    .success(true)
-                    .build()
         );
     }
 }

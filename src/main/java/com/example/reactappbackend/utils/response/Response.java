@@ -20,8 +20,8 @@ public class Response<T> {
     }
 
     public Response(T t) {
-        status = Status.OK;
-        statusCode = HttpStatus.OK.value();
+        this.status = Status.OK;
+        this.statusCode = HttpStatus.OK.value();
         this.data = t;
     }
 
