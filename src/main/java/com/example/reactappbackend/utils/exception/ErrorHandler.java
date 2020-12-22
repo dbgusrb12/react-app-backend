@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ErrorHandler {
 
     @ExceptionHandler(Exception.class)
-    public ErrorResponse handleAllExceptions(HttpServletRequest request, Exception exception) {
-        return ErrorResponse.of(request, exception);
+    public ErrorResponse handleAllExceptions(Exception exception) {
+        return ErrorResponse.of(exception);
     }
 }

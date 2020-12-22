@@ -17,6 +17,7 @@ import java.util.Map;
 public class JwtUtils {
     private static String secretKey = "sample.secret.key";
     private static Long tokenExpiresInMillis = 30 * 60 * 1000L;
+    private static Long refreshTokenExpiresInMillis = 7 * 24 * 60 * 60 * 1000L;
 
     public static String createToken(String email, String name) {
         // 암호화 설정
@@ -49,6 +50,30 @@ public class JwtUtils {
         return jwtBuilder.compact();
     }
 
+    public static String createRefreshToken() {
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        String encodingSecretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+
+        Date expireTime = new Date();
+        long nowTime = expireTime.getTime();
+        expireTime.setTime(expireTime.getTime() + refreshTokenExpiresInMillis);
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", "JWT");
+        header.put("alg", "HS256");
+
+        Claims claims = Jwts.claims();
+        claims.put("issuedAt", nowTime);
+        claims.put("expiration", expireTime.getTime());
+
+        JwtBuilder jwtBuilder = Jwts.builder()
+                .setHeader(header)
+                .setClaims(claims)
+                .setExpiration(expireTime)
+                .signWith(signatureAlgorithm, encodingSecretKey);
+        return jwtBuilder.compact();
+    }
+
     public static String refreshAccessToken(String jwt) {
         Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                 .parseClaimsJws(jwt).getBody();
@@ -58,6 +83,22 @@ public class JwtUtils {
         String name = obj.get("name").getAsString();
 
         return createToken(email, name);
+    }
+
+    /**
+     *
+     * @param jwt : access token
+     * @param key : claims 에서 뽑고 싶은 값
+     * @return
+     */
+    public static String claimsParsingFromToken(String jwt, String key) {
+        Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                .parseClaimsJws(jwt).getBody();
+        JsonObject obj = new Gson().fromJson(claims.toString(), JsonObject.class);
+
+        String claim = obj.get(key).getAsString();
+
+        return claim;
     }
 
     public static TokenStatus statusToken(String jwt) {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.reactappbackend.mapper.UserMapper">
+
+    <insert id="registerUser" parameterType="User">
+        INSERT INTO USER(
+          USER_ID,
+          AUTH,
+          USER_NAME,
+          EMAIL,
+          PASSWORD,
+          TOKEN
+        ) VALUES (
+          #{userId},
+          #{auth},
+          #{userName},
+          #{email},
+          #{password},
+          #{token}
+        )
+    </insert>
+
+    <select id="findByEmail" parameterType="String" resultType="User">
+        SELECT * FROM USER WHERE EMAIL = #{email}
+    </select>
+
+    <update id="updateToken" parameterType="User" >
+        UPDATE USER
+        SET TOKEN = #{token}
+        WHERE USER_ID = #{userId}
+    </update>
+
+</mapper>
