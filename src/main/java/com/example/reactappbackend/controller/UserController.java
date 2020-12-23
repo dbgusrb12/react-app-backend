@@ -4,7 +4,6 @@ import com.example.reactappbackend.model.user.request.LoginUserRequest;
 import com.example.reactappbackend.model.user.request.RegisterRequest;
 import com.example.reactappbackend.model.user.response.AuthUserResponse;
 import com.example.reactappbackend.model.user.response.LoginUserResponse;
-import com.example.reactappbackend.model.user.response.LogoutUserResponse;
 import com.example.reactappbackend.model.user.response.RegisterResponse;
 import com.example.reactappbackend.service.UserService;
 import com.example.reactappbackend.utils.response.Response;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 
@@ -38,27 +36,16 @@ public class UserController {
     }
 
     @GetMapping(value = "/auth")
-    public Response<AuthUserResponse> authCheck(HttpServletRequest request) {
+    public Response<AuthUserResponse> authCheck(@RequestHeader("token") String token) {
         // 토큰 체크해서 인증 하는 로직 구현
-        String token = request.getHeader("token");
-        boolean admin = false;
-        boolean auth = false;
+        int auth = 0;
         if(StringUtils.hasText(token)) {
-            admin = userService.authCheck(token);
-            auth = true;
+            auth = userService.authCheck(token);
         }
         return new Response<>(
             AuthUserResponse.builder()
-                    .admin(admin)
                     .auth(auth)
                     .build()
         );
     }
-
-    @GetMapping(value = "/logout")
-    public Response<LogoutUserResponse> logoutUser() {
-        // 토큰 파기 후 success 처리
-        return new Response<>(LogoutUserResponse.builder().success(true).build());
-    }
-
 }

@@ -7,10 +7,7 @@ import com.example.reactappbackend.model.user.request.RegisterRequest;
 import com.example.reactappbackend.model.user.response.LoginUserResponse;
 import com.example.reactappbackend.model.user.response.RegisterResponse;
 import com.example.reactappbackend.utils.JwtUtils;
-import com.example.reactappbackend.utils.TokenStatus;
 import com.example.reactappbackend.utils.exception.Error;
-import com.example.reactappbackend.utils.exception.ErrorCode;
-import com.example.reactappbackend.utils.exception.ErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -34,14 +31,13 @@ public class UserService {
         String token = JwtUtils.createToken(registerRequest.getEmail(), registerRequest.getName());
         String refreshToken = JwtUtils.createRefreshToken();
 
-        User user = User.builder()
-                .userId(uuid)
-                .auth(0)
-                .userName(registerRequest.getName())
-                .email(registerRequest.getEmail())
-                .password(password)
-                .token(refreshToken)
-                .build();
+        User user = new User();
+        user.setUserId(uuid);
+        user.setAuth(0);
+        user.setUserName(registerRequest.getName());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(password);
+        user.setToken(refreshToken);
         try {
             userMapper.registerUser(user);
         } catch(Exception e) {
@@ -82,18 +78,21 @@ public class UserService {
                 .userId(user.getUserId())
                 .refreshToken(user.getToken())
                 .token(token)
-                .admin(user.getAuth() != 0)
-                .auth(true)
+                .auth(user.getAuth() == 0 ? 1 : 2)
                 .build();
     }
 
-    public boolean authCheck(String token) {
+    public int authCheck(String token) {
         String email = JwtUtils.claimsParsingFromToken(token, "email");
         User user = userMapper.findByEmail(email);
-        if(user.getAuth() == 0) {
-            return false;
+
+        if(ObjectUtils.isEmpty(user)) {
+            throw Error.of(InvalidEmail);
         }
-        return true;
+        if(user.getAuth() == 0) {
+            return 1;
+        }
+        return 2;
     }
 
     private String generateUUid() {

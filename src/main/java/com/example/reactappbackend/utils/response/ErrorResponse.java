@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.http.HttpStatus;
 
-import javax.servlet.http.HttpServletRequest;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ErrorResponse extends Response {

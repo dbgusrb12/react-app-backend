@@ -1,15 +1,13 @@
 package com.example.reactappbackend.model.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
+import java.sql.Date;
 
 @Data
-@Builder
 public class User {
     private String userId;
-    private int auth;
+    private Integer auth;
     private String userName;
     private String email;
     private String password;

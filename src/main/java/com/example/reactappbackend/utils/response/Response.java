@@ -1,6 +1,5 @@
 package com.example.reactappbackend.utils.response;
 
-import com.example.reactappbackend.utils.JsonUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

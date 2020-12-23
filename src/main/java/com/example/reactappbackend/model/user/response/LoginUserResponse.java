@@ -9,6 +9,5 @@ public class LoginUserResponse {
     private String token;
     private String refreshToken;
     private String userId;
-    private boolean admin;
-    private boolean auth;
+    private int auth;
 }

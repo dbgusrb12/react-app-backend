@@ -3,12 +3,8 @@ package com.example.reactappbackend.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.jsonwebtoken.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
