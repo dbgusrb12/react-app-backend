@@ -9,7 +9,10 @@ import java.util.List;
 @Mapper
 @Repository
 public interface BoardMapper {
-    List<Board> boardList(int auth);
+
+    int boardListCount(Board board);
+
+    List<Board> boardList(Board board);
 
     void insertBoard(Board board);
 
@@ -18,5 +21,6 @@ public interface BoardMapper {
     void updateBoard(Board board);
 
     void deleteBoard(Integer boardId);
+
 }
 

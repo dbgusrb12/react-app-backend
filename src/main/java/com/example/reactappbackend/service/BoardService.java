@@ -23,11 +23,17 @@ import static com.example.reactappbackend.utils.exception.ErrorCode.*;
 public class BoardService {
     private final BoardMapper boardMapper;
 
-    public BoardListResponse boardList(int auth, String token) {
+    public BoardListResponse boardList(int auth, String token, int page) {
         if(!StringUtils.hasText(token)) {
             auth = 0;
         }
-        List<Board> boardList = boardMapper.boardList(auth);
+        Board filterBoard = new Board();
+        filterBoard.setAuth(auth);
+        filterBoard.setPage(page);
+        filterBoard.setTotalCount(boardMapper.boardListCount(filterBoard));
+        filterBoard.setPaging();
+
+        List<Board> boardList = boardMapper.boardList(filterBoard);
 
         return BoardListResponse.builder()
                 .boardList(
@@ -35,11 +41,14 @@ public class BoardService {
                                 board -> BoardListResponse.Board.builder()
                                         .boardId(board.getBoardId())
                                         .userId(board.getUserId())
+                                        .userName(board.getUserName())
                                         .categoryName(board.getCategoryName())
                                         .title(board.getTitle())
                                         .createDate(board.getCreateDate())
                                         .build())
                                 .collect(Collectors.toList()))
+                .hasNext(filterBoard.isHasNext())
+                .hasPrevious(filterBoard.isHasPrevious())
                 .build();
     }
 

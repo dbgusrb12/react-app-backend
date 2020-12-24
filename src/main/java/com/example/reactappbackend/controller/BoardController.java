@@ -28,8 +28,10 @@ public class BoardController {
      */
     // TODO 추후 페이징 작업 및 필터 관련 기능 추가!
     @GetMapping
-    public Response<BoardListResponse> boardList(@RequestHeader("token") String token, int auth) {
-        BoardListResponse boardListResponse = boardService.boardList(auth, token);
+    public Response<BoardListResponse> boardList(@RequestHeader("token") String token,
+                                                 @RequestParam(defaultValue = "1") int page,
+                                                 int auth) {
+        BoardListResponse boardListResponse = boardService.boardList(auth, token, page);
         return new Response<>(boardListResponse);
     }
 

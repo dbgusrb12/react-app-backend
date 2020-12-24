@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface ReplyMapper {
 
-    List<Reply> replyList(Integer boardId);
+    int replyListCount(Reply reply);
 
-    List<Reply> commentList(Integer replyId);
+    List<Reply> replyList(Reply reply);
 
     void insertReply(Reply reply);
 

@@ -8,7 +8,6 @@ import com.example.reactappbackend.model.reply.response.ReplyListResponse;
 import com.example.reactappbackend.utils.exception.Error;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,12 +20,12 @@ public class ReplyService {
     private final ReplyMapper replyMapper;
 
     public ReplyListResponse replyList(Integer parentId, Integer replyType) {
-        List<Reply> replyList;
-        if(replyType == 0) {
-            replyList = replyMapper.replyList(parentId);
-        } else{
-            replyList = replyMapper.commentList(parentId);
-        }
+        Reply filterReply = new Reply();
+        filterReply.setParentId(parentId);
+        filterReply.setReplyType(replyType);
+        filterReply.setTotalCount(replyMapper.replyListCount(filterReply));
+        filterReply.setPaging();
+        List<Reply> replyList = replyMapper.replyList(filterReply);
 
         return ReplyListResponse.builder()
                 .replyList(
@@ -42,6 +41,7 @@ public class ReplyService {
                                         .updateDate(reply.getUpdateDate())
                                         .build())
                         .collect(Collectors.toList()))
+                .hasNext(filterReply.isHasNext())
                 .build();
     }
 

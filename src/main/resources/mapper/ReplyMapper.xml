@@ -2,22 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.reactappbackend.mapper.ReplyMapper">
 
-    <select id="replyList" parameterType="Integer" resultType="Reply">
-        SELECT REPLY_ID, R.USER_ID, U.USER_NAME, PARENT_ID, CONTENT,
-                (SELECT COUNT(*) FROM REPLY WHERE REPLY_TYPE = 1 AND PARENT_ID = R.REPLY_ID) AS commentCount,
-                R.CREATE_DATE, R.UPDATE_DATE
+    <select id="replyListCount" parameterType="Reply" resultType="Integer">
+        SELECT COUNT(*)
         FROM REPLY R
         JOIN USER U ON(R.USER_ID = U.USER_ID)
-        WHERE REPLY_TYPE = 0 AND PARENT_ID = #{boardId}
+        WHERE PARENT_ID = #{parentId} AND REPLY_TYPE = #{replyType}
     </select>
 
-    <select id="commentList" parameterType="Integer" resultType="Reply">
+    <select id="replyList" parameterType="Reply" resultType="Reply">
         SELECT REPLY_ID, R.USER_ID, U.USER_NAME, PARENT_ID, CONTENT,
                 (SELECT COUNT(*) FROM REPLY WHERE REPLY_TYPE = 1 AND PARENT_ID = R.REPLY_ID) AS commentCount,
                 R.CREATE_DATE, R.UPDATE_DATE
         FROM REPLY R
         JOIN USER U ON(R.USER_ID = U.USER_ID)
-        WHERE REPLY_TYPE = 1 AND PARENT_ID = #{replyId}
+        WHERE PARENT_ID = #{parentId} AND REPLY_TYPE = #{replyType}
+        ORDER BY CREATE_DATE
     </select>
 
     <insert id="insertReply" parameterType="Reply" >

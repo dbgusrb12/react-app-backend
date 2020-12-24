@@ -1,11 +1,12 @@
 package com.example.reactappbackend.model.dto;
 
+import com.example.reactappbackend.utils.Paging;
 import lombok.Data;
 
 import java.sql.Date;
 
 @Data
-public class Reply {
+public class Reply extends Paging {
     private Integer replyId;
     private String userId;
     private String userName;

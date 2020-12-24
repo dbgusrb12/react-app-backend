@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 public class ReplyListResponse {
     private List<Reply> replyList;
-
+    private boolean hasNext;
     @Data
     @Builder
     public static class Reply {
