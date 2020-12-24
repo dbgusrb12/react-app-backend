@@ -17,7 +17,7 @@ public class ReplyListResponse {
         private Integer replyId;
         private String userId;
         private String userName;
-        private Integer boardId;
+        private Integer parentId;
         private String content;
         private Integer commentCount;
         private Date createDate;

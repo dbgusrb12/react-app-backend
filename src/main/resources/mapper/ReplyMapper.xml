@@ -4,11 +4,48 @@
 
     <select id="replyList" parameterType="Integer" resultType="Reply">
         SELECT REPLY_ID, R.USER_ID, U.USER_NAME, PARENT_ID, CONTENT,
-                (SELECT COUNT(*) FROM REPLY WHERE REPLY_TYPE = 1 AND REPLY_ID = R.PARENT_ID) AS commentCount,
-                CREATE_DATE, UPDATE_DATE
+                (SELECT COUNT(*) FROM REPLY WHERE REPLY_TYPE = 1 AND PARENT_ID = R.REPLY_ID) AS commentCount,
+                R.CREATE_DATE, R.UPDATE_DATE
         FROM REPLY R
         JOIN USER U ON(R.USER_ID = U.USER_ID)
-        WHERE REPLY_TYPE = 0
+        WHERE REPLY_TYPE = 0 AND PARENT_ID = #{boardId}
     </select>
+
+    <select id="commentList" parameterType="Integer" resultType="Reply">
+        SELECT REPLY_ID, R.USER_ID, U.USER_NAME, PARENT_ID, CONTENT,
+                (SELECT COUNT(*) FROM REPLY WHERE REPLY_TYPE = 1 AND PARENT_ID = R.REPLY_ID) AS commentCount,
+                R.CREATE_DATE, R.UPDATE_DATE
+        FROM REPLY R
+        JOIN USER U ON(R.USER_ID = U.USER_ID)
+        WHERE REPLY_TYPE = 1 AND PARENT_ID = #{replyId}
+    </select>
+
+    <insert id="insertReply" parameterType="Reply" >
+        INSERT INTO REPLY(
+          USER_ID,
+          PARENT_ID,
+          CONTENT,
+          REPLY_TYPE
+        ) VALUES(
+          #{userId},
+          #{parentId},
+          #{content},
+          #{replyType}
+        )
+    </insert>
+
+    <update id="updateReply" parameterType="Reply">
+        UPDATE REPLY
+        <set>
+            <if test="content != null and content != ''">
+                CONTENT = #{content}
+            </if>
+        </set>
+        WHERE REPLY_ID = #{replyId}
+    </update>
+
+    <delete id="deleteReply" parameterType="Integer" >
+        DELETE FROM REPLY WHERE REPLY_ID = #{replyId}
+    </delete>
 
 </mapper>

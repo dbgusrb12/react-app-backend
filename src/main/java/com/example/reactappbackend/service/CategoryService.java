@@ -1,6 +1,7 @@
 package com.example.reactappbackend.service;
 
 import com.example.reactappbackend.mapper.CategoryMapper;
+import com.example.reactappbackend.model.category.request.InsertCategoryRequest;
 import com.example.reactappbackend.model.category.response.CategoryListResponse;
 import com.example.reactappbackend.model.dto.Category;
 import com.example.reactappbackend.utils.exception.Error;
@@ -33,12 +34,14 @@ public class CategoryService {
                 .build();
     }
 
-    public void insertCategory(String categoryName) {
-        if(!StringUtils.hasText(categoryName)) {
+    public void insertCategory(InsertCategoryRequest insertCategoryRequest) {
+        if(!StringUtils.hasText(insertCategoryRequest.getCategoryName())) {
             throw Error.of(MissingParameter, "categoryName is empty");
         }
+        Category category = new Category();
+        category.setCategoryName(insertCategoryRequest.getCategoryName());
         try {
-            categoryMapper.insertCategory(categoryName);
+            categoryMapper.insertCategory(category);
         } catch (Exception e) {
             throw Error.of(JdbcError, e.getMessage());
         }

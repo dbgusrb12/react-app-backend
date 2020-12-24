@@ -1,5 +1,6 @@
 package com.example.reactappbackend.controller;
 
+import com.example.reactappbackend.model.category.request.InsertCategoryRequest;
 import com.example.reactappbackend.model.category.response.CategoryListResponse;
 import com.example.reactappbackend.service.CategoryService;
 import com.example.reactappbackend.utils.response.Response;
@@ -20,8 +21,8 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Response insertCategory(String categoryName) {
-        categoryService.insertCategory(categoryName);
+    public Response insertCategory(@RequestBody InsertCategoryRequest insertCategoryRequest) {
+        categoryService.insertCategory(insertCategoryRequest);
         return Response.ok();
     }
 

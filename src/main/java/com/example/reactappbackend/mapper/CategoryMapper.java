@@ -12,7 +12,7 @@ public interface CategoryMapper {
 
     List<Category> categoryList();
 
-    void insertCategory(String categoryName);
+    void insertCategory(Category category);
 
     void deleteCategory(Integer categoryId);
 }

@@ -11,4 +11,13 @@ import java.util.List;
 public interface ReplyMapper {
 
     List<Reply> replyList(Integer boardId);
+
+    List<Reply> commentList(Integer replyId);
+
+    void insertReply(Reply reply);
+
+    void updateReply(Reply reply);
+
+    void deleteReply(Integer replyId);
+
 }

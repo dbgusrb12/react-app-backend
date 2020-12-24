@@ -2,20 +2,31 @@ package com.example.reactappbackend.service;
 
 import com.example.reactappbackend.mapper.ReplyMapper;
 import com.example.reactappbackend.model.dto.Reply;
+import com.example.reactappbackend.model.reply.request.InsertReplyRequest;
+import com.example.reactappbackend.model.reply.request.UpdateReplyRequest;
 import com.example.reactappbackend.model.reply.response.ReplyListResponse;
+import com.example.reactappbackend.utils.exception.Error;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.reactappbackend.utils.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
 public class ReplyService {
     private final ReplyMapper replyMapper;
 
-    public ReplyListResponse replyList(Integer boardId) {
-        List<Reply> replyList = replyMapper.replyList(boardId);
+    public ReplyListResponse replyList(Integer parentId, Integer replyType) {
+        List<Reply> replyList;
+        if(replyType == 0) {
+            replyList = replyMapper.replyList(parentId);
+        } else{
+            replyList = replyMapper.commentList(parentId);
+        }
 
         return ReplyListResponse.builder()
                 .replyList(
@@ -24,7 +35,7 @@ public class ReplyService {
                                         .replyId(reply.getReplyId())
                                         .userId(reply.getUserId())
                                         .userName(reply.getUserName())
-                                        .boardId(reply.getParentId())
+                                        .parentId(reply.getParentId())
                                         .content(reply.getContent())
                                         .commentCount(reply.getCommentCount())
                                         .createDate(reply.getCreateDate())
@@ -33,4 +44,38 @@ public class ReplyService {
                         .collect(Collectors.toList()))
                 .build();
     }
+
+    public void insertReply(InsertReplyRequest insertReplyRequest) {
+        Reply reply = new Reply();
+        reply.setUserId(insertReplyRequest.getUserId());
+        reply.setParentId(insertReplyRequest.getParentId());
+        reply.setContent(insertReplyRequest.getContent());
+        reply.setReplyType(insertReplyRequest.getReplyType());
+
+        try {
+            replyMapper.insertReply(reply);
+        } catch (Exception e) {
+            throw Error.of(JdbcError, e.getMessage());
+        }
+    }
+
+    public void updateReply(Integer replyId, UpdateReplyRequest updateReplyRequest) {
+        Reply reply = new Reply();
+        reply.setReplyId(replyId);
+        reply.setContent(updateReplyRequest.getContent());
+        try {
+            replyMapper.updateReply(reply);
+        } catch (Exception e) {
+            throw Error.of(JdbcError, e.getMessage());
+        }
+    }
+
+    public void deleteReply(Integer replyId) {
+        try {
+            replyMapper.deleteReply(replyId);
+        } catch (Exception e) {
+            throw Error.of(JdbcError, e.getMessage());
+        }
+    }
+
 }
